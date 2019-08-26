@@ -48,11 +48,11 @@ case $2 in
 esac
 
 #判断日志目录
-if [[ -e /data ]] && [[ ! -e /data/aslog/`date "+%Y%m%d"` ]] ;then
+if [[ -e /data ]] && [[ ! -e /data/aslog/`date "+%Y%m%d"` ]]  && [[ $1 -eq 'erp.homemoji.com' ]] && [[ $2 -eq 1 ]] ;then
     mkdir -p /data/aslog/`date "+%Y%m%d"`
 fi
 
-if [[ -e /webData ]]  && [[ ! -e /webData/aslog/`date "+%Y%m%d"` ]];then
+if [[ -e /webData ]]  && [[ ! -e /webData/aslog/`date "+%Y%m%d"` ]] && [[ $1 -eq 'erp.io' ]] &&  [[ $2 -eq 0 ]] ;then
     mkdir -p /webData/aslog/`date "+%Y%m%d"`
 fi
 
@@ -64,7 +64,7 @@ elif [[ -e /webData ]] && [[ ! -e /webData/$1 ]]; then
 fi
 
 
-if [[ -e /data/wwwroot ]] ; then
+if [[ -e /data/wwwroot ]] && [[ $1 -eq 'erp.homemoji.com' ]] && [[ $2 -eq 1 ]]  ; then
     cd /data/wwwroot/
     echo 'tar the project directory and the sql file to package please hold a minutes ........'
     tar zcf ${TAR} $1 --exclude $1/public/uploads

@@ -55,20 +55,25 @@ case "$2" in
 esac
 
 #判断日志目录
-if [ -e /data ] && [ ! -e /data/AutoShellLog/`date "+%Y-%m-%d"` ] ;then
-    mkdir -p /data/AutoShellLog/`date "+%Y-%m-%d"`
+if [[ $1 -eq 'erp.io' ]] &&  [[ $2 -eq 0 ]]; then
+    if [ -e /webData ]  && [ ! -e /webData/AutoShellLog/`date "+%Y-%m-%d"` ];then
+        mkdir -p /webData/AutoShellLog/`date "+%Y-%m-%d"`
+    fi
+
+    if [ -e /webData ] && [ ! -e /webData/$1 ]; then
+        mkdir -p /webData/$1
+    fi
 fi
 
-if [ -e /webData ]  && [ ! -e /webData/AutoShellLog/`date "+%Y-%m-%d"` ];then
-    mkdir -p /webData/AutoShellLog/`date "+%Y-%m-%d"`
-fi
-
-#判断当前项目目录是否存在
-if [ -e /data ]  &&  [ ! -e /data/$1 ]; then
+if [[ $1 -eq 'erp.homemoji.com' ]] && [[ $2 -eq 1 ]]; then
+   if [[ -e /data ]] && [[ ! -e /data/AutoShellLog/`date "+%Y-%m-%d"` ]] ;then
+        mkdir -p /data/AutoShellLog/`date "+%Y-%m-%d"`
+   fi
+   if [ -e /data ]  &&  [ ! -e /data/$1 ]; then
     mkdir -p /data/$1
-elif [ -e /webData ] && [ ! -e /webData/$1 ]; then
-    mkdir -p /webData/$1
+   fi
 fi
+
 
 #备份数据库
 echo 'it is prepare for backup the databases to a SQL file'
@@ -80,7 +85,7 @@ else
     sleep 5
 fi
 
-if [ -e /data ] ; then
+if [[ -e /data ]] && [ $1 -eq 'erp.homemoji.com' ] && [ $2 -eq 1 ] ; then
     cd /data
     echo 'tar the project directory and the sql file to package please hold a minutes ........'
     tar zcf $TAR $TAR1 $1
