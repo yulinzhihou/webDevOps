@@ -36,7 +36,7 @@ esac
 find $1 -name ${DB_NAME}"*.sql" -type f -mtime +7 -exec rm -rf {} \; > /dev/null 2>&1
 #传送到专用备份服务器
 if [[ $HOSTNAME -eq 'DataMaster-48164' ]]; then
-    curl -kv --pubkey ~/.ssh/id_rsa.pub -T ${DIR}/${DB_NAME}-${TIME}.sql sftp://root@222.240.0.29/backup/online/ &>/dev/null
+    curl -kv --pubkey ~/.ssh/id_rsa.pub -T ${DIR}/${DB_NAME}-${TIME}.sql sftp://root@222.240.0.29/backup/online/mysql/ &>/dev/null
     if [[ $? -eq 0 ]]; then
         echo -e "${PINK}upload backup file of $DB_NAME successfully ...... ${PLAIN}"
     else

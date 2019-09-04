@@ -83,50 +83,50 @@ fi
 
 if [[ -e /data/wwwroot ]] && [[ $2 -eq 1 ]]; then
     case $1 in
-    erp.homemoji.com)
-    cd /data/wwwroot/
-    echo 'tar the project directory and the sql file to package please hold a minutes ........'
-    tar zcf ${TAR} $1 --exclude $1/public/uploads
-    echo "tar $TAR of $1 successfully" >> /data/aslog/`date "+%Y%m%d"`/$1.log
-    sleep 5
-    #进入ERP项目目录
-    if [[ ! -e /data/wwwroot/$1 ]];then
-        echo "the project directory is not exists in this server, now init the project........."
-        git clone git@codehub-cn-south-1.devcloud.huaweicloud.com:ERP00003/ERP.git $1
-        sleep 15
-    fi
-    #进入项目目录并更新项目
-    cd /data/wwwroot/$1
-    echo "enter the directory `pwd`";
-    if [[ $2 -eq 0 ]]; then
-        echo "It's being ready to git clone from origin develop branch to local..........." >> /data/aslog/`date "+%Y%m%d"`/$1.log
-        echo "It's being ready to git clone from origin develop branch to local..........."
-        git pull origin develop  --force
-    else
-        echo "It's being ready to git clone from origin master branch to local..........." >> /data/aslog/`date "+%Y%m%d"`/$1.log
-        echo "It's being ready to git clone from origin master branch to local..........."
-        git pull origin master --force
-    fi
+        erp.homemoji.com)
+            cd /data/wwwroot/
+            echo 'tar the project directory and the sql file to package please hold a minutes ........'
+#            tar zcf ${TAR} $1 --exclude $1/public/uploads
+            echo "tar $TAR of $1 successfully" >> /data/aslog/`date "+%Y%m%d"`/$1.log
+            sleep 5
+            #进入ERP项目目录
+            if [[ ! -e /data/wwwroot/$1 ]];then
+                echo "the project directory is not exists in this server, now init the project........."
+                git clone git@codehub-cn-south-1.devcloud.huaweicloud.com:ERP00003/ERP.git $1
+                sleep 15
+            fi
+            #进入项目目录并更新项目
+            cd /data/wwwroot/$1
+            echo "enter the directory `pwd`";
+            if [[ $2 -eq 0 ]]; then
+                echo "It's being ready to git clone from origin develop branch to local..........." >> /data/aslog/`date "+%Y%m%d"`/$1.log
+                echo "It's being ready to git clone from origin develop branch to local..........."
+                git pull origin develop  --force
+            else
+                echo "It's being ready to git clone from origin master branch to local..........." >> /data/aslog/`date "+%Y%m%d"`/$1.log
+                echo "It's being ready to git clone from origin master branch to local..........."
+                git pull origin master --force
+            fi
 
-    if [[ $? -eq 0 ]];then
-        echo "git logs ten nubers nearby below" >> /data/aslog/`date "+%Y%m%d"`/$1.log
-        git log --oneline | head -10 >> /data/aslog/`date "+%Y%m%d"`/$1.log
-        echo "It's Being ready to copy backend web project to folder /data/wwwroot/$1" >> /data/aslog/`date "+%Y%m%d"`/$1.log
-        chown -R www:www /data/wwwroot/$1
-        ls -lha /data/wwwroot/$1 >> /data/aslog/`date "+%Y%m%d"`/$1.log
-        sleep 3
-        #传送到专用备份服务器 注：由于备份文件过大，导致会长期占用带宽。所以部署项目的时候不进行上传操作
-#        if [[ $HOSTNAME -eq 'WebServer1-6264' ]]; then
-#            curl -kv --pubkey ~/.ssh/id_rsa.pub -T /data/wwwroot/${TAR}.tar.gz sftp://root@222.240.0.29/backup/online/ &>/dev/null
-#            if [[ $? -eq 0 ]]; then
-#                echo -e "${PINK}upload backup file of $TAR successfully ...... ${PLAIN}"
-#            else
-#                echo -e "${PINK}upload backup file of $TAR failure ...... ${PLAIN}"
-#            fi
-#        fi
+            if [[ $? -eq 0 ]];then
+                echo "git logs ten nubers nearby below" >> /data/aslog/`date "+%Y%m%d"`/$1.log
+                git log --oneline | head -10 >> /data/aslog/`date "+%Y%m%d"`/$1.log
+                echo "It's Being ready to copy backend web project to folder /data/wwwroot/$1" >> /data/aslog/`date "+%Y%m%d"`/$1.log
+                chown -R www:www /data/wwwroot/$1
+                ls -lha /data/wwwroot/$1 >> /data/aslog/`date "+%Y%m%d"`/$1.log
+                sleep 3
+                #传送到专用备份服务器 注：由于备份文件过大，导致会长期占用带宽。所以部署项目的时候不进行上传操作
+        #        if [[ $HOSTNAME -eq 'WebServer1-6264' ]]; then
+        #            curl -kv --pubkey ~/.ssh/id_rsa.pub -T /data/wwwroot/${TAR}.tar.gz sftp://root@222.240.0.29/backup/online/ &>/dev/null
+        #            if [[ $? -eq 0 ]]; then
+        #                echo -e "${PINK}upload backup file of $TAR successfully ...... ${PLAIN}"
+        #            else
+        #                echo -e "${PINK}upload backup file of $TAR failure ...... ${PLAIN}"
+        #            fi
+        #        fi
 
-    fi
-    ;;
+            fi
+        ;;
     esac
 
 elif [[ -e /webData/$1 ]] && [[ $2 -eq 0 ]]; then
@@ -135,7 +135,7 @@ elif [[ -e /webData/$1 ]] && [[ $2 -eq 0 ]]; then
     cd /webData
     echo 'tar the project directory and the sql file to package please hold a minutes ........'
     tar zcf ${TAR} $1
-    mv ${TAR} /backup/local/
+    mv ${TAR} /backup/local/website/
     echo "tar ${TAR} of $1 successfully" >> /webData/aslog/`date "+%Y%m%d"`/$1.log
     sleep 5
     #进入ERP项目目录
