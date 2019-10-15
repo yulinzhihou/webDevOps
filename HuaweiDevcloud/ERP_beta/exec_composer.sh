@@ -11,13 +11,7 @@ PLAIN="\033[0m"
 #执行composer组件安装
 #判断用户输入的第一个参数
 case $1 in
-    erp.homemoji.com)
-        if [[ ! -e /data/wwwroot/$1 ]]; then
-            echo "your enter the directory $1 is not exists,please check it out"
-            exit
-        fi
-   ;;
-   erp.homemoji.com.cn)
+    erp.homemoji.com.cn)
         if [[ ! -e /data/wwwroot/$1 ]]; then
             echo "your enter the directory $1 is not exists,please check it out"
             exit
@@ -37,7 +31,7 @@ esac
 #执行操作
 if [[ -e /data/wwwroot ]] ; then
     echo 'run composer install in project please hold a minutes ........'
-    cd /data/wwwroot/erp.homemoji.com && composer install
+    cd /data/wwwroot/erp.homemoji.com.cn && composer install
     echo "composer install was successfully" >> /data/aslog/`date "+%Y%m%d"`/$1.log
     sleep 5
 else

@@ -8,13 +8,7 @@ PINK="\033[1;35;25m"
 PLAIN="\033[0m"
 #判断用户输入的第一个参数
 case $1 in
-    erp.homemoji.com)
-        if [[ ! -e /data/wwwroot/$1 ]]; then
-            echo "your enter the directory $1 is not exists,please check it out"
-            exit
-        fi
-   ;;
-   erp.homemoji.com.cn)
+    erp.homemoji.com.cn)
         if [[ ! -e /data/wwwroot/$1 ]]; then
             echo "your enter the directory $1 is not exists,please check it out"
             exit
@@ -38,7 +32,7 @@ if [[ -e /data/wwwroot ]] ; then
     #执行菜单生成
     bash data/command/menu.sh >> /data/aslog/`date "+%Y%m%d"`/erp_bash_menu.log 2>&1
     sleep 5
-    cat /data/aslog/`date "+%Y%m%d"`/erp_bash_menu.log
+    cat /data/aslog/`date "+%Y%m%d"`/erp_beta_bash_menu.log
 else
     cd /webData/$1
     echo 'run command menu for project ........' >> /data/aslog/`date "+%Y%m%d"`/$1.log

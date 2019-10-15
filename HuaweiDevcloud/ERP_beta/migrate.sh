@@ -11,17 +11,11 @@ PLAIN="\033[0m"
 #执行php think数据迁移，以及种子文件迁移组件安装
 #判断用户输入的第一个参数
 case $1 in
-    erp.homemoji.com)
+    erp.homemoji.com.cn)
         if [[ ! -e /data/wwwroot/$1 ]]; then
             echo "your enter the directory $1 is not exists,please check it out"
             exit
         fi
-   ;;
-   erp.homemoji.com.cn)
-    if [[ ! -e /data/wwwroot/$1 ]]; then
-        echo "your enter the directory $1 is not exists,please check it out"
-        exit
-    fi
    ;;
     erp.io)
         if [[ ! -e /webData/$1 ]]; then
