@@ -65,7 +65,7 @@ if [[ -e /data ]] && [[ ! -e /data/aslog/`date "+%Y%m%d"` ]]  && [[ $2 -eq 1 ]] 
     esac
 fi
 #判断外网测式服日志目录
-if [[ -e /data ]] && [[ ! -e /data/aslog/`date "+%Y%m%d"` ]]  && [[ $2 -eq 1 ]] ;then
+if [[ -e /data ]] && [[ ! -e /data/aslog/`date "+%Y%m%d"` ]]  && [[ $2 -eq 0 ]] ;then
     case $1 in
     erp.homemoji.com)
     mkdir -p /data/aslog/`date "+%Y%m%d"`
@@ -91,7 +91,7 @@ if [[ -e /data ]] &&  [[ ! -e /data/wwwroot/$1 ]] && [[ $2 -eq 1 ]]; then
 fi
 
 #判断当前外网测试服项目目录是否存在
-if [[ -e /data ]] &&  [[ ! -e /data/wwwroot/$1 ]] && [[ $2 -eq 1 ]]; then
+if [[ -e /data ]] &&  [[ ! -e /data/wwwroot/$1 ]] && [[ $2 -eq 0 ]]; then
     case $1 in
     erp.homemoji.com.cn)
     mkdir -p /data/wwwroot/$1

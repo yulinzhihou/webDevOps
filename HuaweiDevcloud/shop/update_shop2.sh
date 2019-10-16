@@ -11,14 +11,14 @@ PINK="\033[1;35;25m"
 PLAIN="\033[0m"
 #判断用户输入的第一个参数
 case $1 in
-    www.homemoji.net)
+    www.homemoji.com)
         if [[ ! -e /data/wwwroot/$1 ]]; then
             echo "your enter the directory $1 is not exists,please check it out"
             exit
         fi
    ;;
-    www.homemoji.net)
-        if [[ ! -e /webData/$1 ]]; then
+    w2.homemoji.com.cn)
+        if [[ ! -e /data/wwwroot/$1 ]]; then
             echo "your enter the directory $1 is not exists,please check it out"
             exit
         fi
@@ -47,19 +47,20 @@ case $2 in
     ;;
 esac
 
-#判断日志目录
+#判断线上正式服日志目录
 if [[ -e /data ]] && [[ ! -e /data/aslog/`date "+%Y%m%d"` ]]  && [[ $2 -eq 1 ]] ;then
     case $1 in
-    www.homemoji.net)
+    www.homemoji.com)
     mkdir -p /data/aslog/`date "+%Y%m%d"`
     ;;
     esac
 fi
 
-if [[ -e /webData ]]  && [[ ! -e /webData/aslog/`date "+%Y%m%d"` ]] &&  [[ $2 -eq 0 ]] ;then
+#判断线上测试服日志目录
+if [[ -e /data ]] && [[ ! -e /data/aslog/`date "+%Y%m%d"` ]]  && [[ $2 -eq 0 ]] ;then
     case $1 in
-    www.homemoji.net)
-    mkdir -p /webData/aslog/`date "+%Y%m%d"`
+    w2.homemoji.com.cn)
+    mkdir -p /data/aslog/`date "+%Y%m%d"`
     ;;
     esac
 fi
@@ -67,24 +68,25 @@ fi
 #判断当前项目目录是否存在
 if [[ -e /data ]] &&  [[ ! -e /data/wwwroot/$1 ]] && [[ $2 -eq 1 ]]; then
     case $1 in
-    www.homemoji.net)
+    www.homemoji.com)
     mkdir -p /data/wwwroot/$1
     ;;
     esac
 fi
 
-if [[ -e /webData ]] &&  [[ ! -e /webData/$1 ]] && [[ $2 -eq 0 ]]; then
+#判断当前项目目录是否存在
+if [[ -e /data ]] &&  [[ ! -e /data/wwwroot/$1 ]] && [[ $2 -eq 0 ]]; then
     case $1 in
-    www.homemoji.net)
-    mkdir -p /webData/$1
+    w2.homemoji.com.cn)
+    mkdir -p /data/wwwroot/$1
     ;;
     esac
 fi
 
-#判断是否为正式服
+
 if [[ -e /data/wwwroot ]] && [[ $2 -eq 1 ]]; then
     case $1 in
-    www.homemoji.net)
+    www.homemoji.com)
     cd /data/wwwroot/
     echo 'tar the project directory and the sql file to package please hold a minutes ........'
     tar zcf ${TAR} homemoji_vn2
@@ -111,56 +113,43 @@ if [[ -e /data/wwwroot ]] && [[ $2 -eq 1 ]]; then
         chown -R www:www /data/wwwroot/homemoji_vn2
         ls -lha /data/wwwroot/homemoji_vn2 >> /data/aslog/`date "+%Y%m%d"`/$1.log
         sleep 3
-        #传送到专用备份服务器 注：由于备份文件过大，导致会长期占用带宽。所以部署项目的时候不进行上传操作
-#        if [[ $HOSTNAME -eq 'WebServer1-6264' ]]; then
-#            curl -kv --pubkey ~/.ssh/id_rsa.pub -T /data/wwwroot/${TAR}.tar.gz sftp://root@222.240.0.29/backup/online/ &>/dev/null
-#            if [[ $? -eq 0 ]]; then
-#                echo -e "${PINK}upload backup file of $TAR successfully ...... ${PLAIN}"
-#            else
-#                echo -e "${PINK}upload backup file of $TAR failure ...... ${PLAIN}"
-#            fi
-#        fi
-
     fi
     ;;
     esac
-#判断是否为测试服
-elif [[ -e /data/wwwroot/$1 ]] && [[ $2 -eq 0 ]]; then
+elif [[ -e /data/wwwroot ]] && [[ $2 -eq 0 ]]; then
     case $1 in
-    www.homemoji.net)
+    w1.homemoji.com.cn)
     cd /data/wwwroot/
     echo 'tar the project directory and the sql file to package please hold a minutes ........'
-    tar zcf ${TAR} homemoji_vn2
-    echo "tar ${TAR} of $1 successfully" >> /data/aslog/`date "+%Y%m%d"`/$1.log
+    tar zcf ${TAR} homemoji_vn2_beta
+    echo "tar $TAR of $1 successfully" >> /data/aslog/`date "+%Y%m%d"`/$1.log
     sleep 5
     #进入ERP项目目录
-    if [[ ! -e /data/wwwroot/homemoji_vn2 ]];then
+    if [[ ! -e /data/wwwroot/homemoji_vn2_beta ]];then
         echo "the project directory is not exists in this server, now init the project........."
-        git clone git@codehub-cn-south-1.devcloud.huaweicloud.com:homemoji_vn200001/homemoji_vn2.git
-        sleep 5
+        git clone git@codehub-cn-south-1.devcloud.huaweicloud.com:homemoji_vn200001/homemoji_vn2.git homemoji_vn2_beta
+        sleep 15
     fi
     #进入项目目录并更新项目
-    cd /data/wwwroot/homemoji_vn2
+    cd /data/wwwroot/homemoji_vn2_beta
     echo "enter the directory `pwd`";
-    if [[ $2 -eq 0 ]]; then
-        echo "It's being ready to git pull from origin develop branch to local..........." >> /data/aslog/`date "+%Y%m%d"`/$1.log
-        echo "It's being ready to git pull from origin develop branch to local..........."
-        git pull origin develop  --force
-    fi
-    #判断更新日志是否成功，并且写入日志
-    if [[ $? -eq 0 ]]; then
+    git checkout .
+    echo "It's being ready to git clone from origin develop branch to local..........." >> /data/aslog/`date "+%Y%m%d"`/$1.log
+    echo "It's being ready to git clone from origin develop branch to local..........."
+    git pull origin develop --force
+
+    if [[ $? -eq 0 ]];then
         echo "git logs ten nubers nearby below" >> /data/aslog/`date "+%Y%m%d"`/$1.log
         git log --oneline | head -10 >> /data/aslog/`date "+%Y%m%d"`/$1.log
-        echo "It's Being ready to copy backend web project to folder /webData/$1" >> /data/aslog/`date "+%Y%m%d"`/$1.log
-        chown -R apache:apache /data/wwwroot/homemoji_vn2
-        ls -lha /data/wwwroot/homemoji_vn2 >> /data/aslog/`date "+%Y%m%d"`/$1.log
+        echo "It's Being ready to copy backend web project to folder /data/wwwroot/$1" >> /data/aslog/`date "+%Y%m%d"`/$1.log
+        chown -R www:www /data/wwwroot/homemoji_vn2_beta
+        ls -lha /data/wwwroot/homemoji_vn2_beta >> /data/aslog/`date "+%Y%m%d"`/$1.log
         sleep 3
     fi
-
-     if [[ ! $2 -eq 0 ]]; then
-        sed -i "s/offcialConnect:true/offcialConnect:false/g" /data/wwwroot/homemoji_vn2/pc/static/js/global.js
-        sed -i "s/offcialConnect:true/offcialConnect:false/g" /data/wwwroot/homemoji_vn2/mobile/static/js/style.js
-    fi
+    echo "It's being ready to modify js configuration file..........." >> /data/aslog/`date "+%Y%m%d"`/$1.log
+    echo "It's being ready to modify js configuration file..........."
+    sed -i "s/offcialConnect:true/offcialConnect:false/g" /data/wwwroot/homemoji_vn2_beta/moblie/static/js/style.js
+    sed -i "s/offcialConnect:true/offcialConnect:false/g" /data/wwwroot/homemoji_vn2_beta/pc/static/js/global.js
     ;;
     esac
 fi
